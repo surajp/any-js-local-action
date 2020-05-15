@@ -1,0 +1,27 @@
+<aura:component implements="lightning:availableForFlowActions">
+  <aura:attribute
+    name="js"
+    type="string"
+    default=""
+    access="public"
+    description="The JS to be executed"
+  />
+  <aura:attribute
+    name="args"
+    type="string"
+    access="public"
+    description="The args to be used"
+  />
+  <aura:attribute
+    name="output"
+    type="string"
+    access="public"
+    description="The output from the action"
+  />
+  <aura:attribute
+    name="outputArray"
+    type="string[]"
+    access="public"
+    description="The output array from the action"
+  />
+</aura:component>

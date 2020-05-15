@@ -1,0 +1,6 @@
+<design:component >
+  <design:attribute name="js" label="Javascript"/>
+  <design:attribute name="args" label="Arguments JSON String"/>
+  <design:attribute name="output" label="The output"/>
+  <design:attribute name="outputArray" label="The output array"/>
+</design:component>
