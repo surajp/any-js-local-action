@@ -1,4 +1,4 @@
-# Execute any JS in Flows. Work around the limitations of flows using JS
+# Execute any JS in Screen Flows. Work around the limitations of flows using JS
 
 Convert strings in flows to arrays/collections, concat, use map, reduce, filters, and more..!.
 
