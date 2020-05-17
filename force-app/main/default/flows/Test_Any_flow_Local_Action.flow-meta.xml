@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Test_Js</name>
-        <label>Test JS</label>
+        <name>Add_Account_Phone</name>
+        <label>Add Account Phone</label>
         <locationX>286</locationX>
         <locationY>265</locationY>
         <actionName>c:anyLocalAction</actionName>
@@ -13,13 +13,13 @@
         <inputParameters>
             <name>args</name>
             <value>
-                <stringValue>{&quot;names&quot;:&quot;Mary,Jack,Jill&quot;}</stringValue>
+                <stringValue>{&quot;names&quot;:{!vAccountsCollStr}}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>js</name>
             <value>
-                <stringValue>args.names.split(&quot;,&quot;).map((row,i)=&gt;row+&#39; is a &#39;+(i%2==0?&quot;girl&quot;:&quot;boy&quot;)+&#39;\n&#39;)</stringValue>
+                <stringValue>JSON.stringify(args.names.map(row=&gt;{row.Phone=&#39;42242424&#39;;return row}))</stringValue>
             </value>
         </inputParameters>
         <outputParameters>
@@ -31,6 +31,56 @@
             <name>outputArray</name>
         </outputParameters>
     </actionCalls>
+    <actionCalls>
+        <name>Deserialize_Accounts</name>
+        <label>Deserialize Accounts</label>
+        <locationX>457</locationX>
+        <locationY>125</locationY>
+        <actionName>DeserializeInvocable</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>UpdateAccountRecords</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>U__output</typeName>
+            <typeValue>Account</typeValue>
+        </dataTypeMappings>
+        <inputParameters>
+            <name>recordsArrayStr</name>
+            <value>
+                <elementReference>vActionOpString</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>AccountsColl</assignToReference>
+            <name>output</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Serialize_Accounts_Coll</name>
+        <label>Serialize Accounts Coll</label>
+        <locationX>156</locationX>
+        <locationY>158</locationY>
+        <actionName>SerializeInvocable</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Add_Account_Phone</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__sobjectArrays</typeName>
+            <typeValue>Account</typeValue>
+        </dataTypeMappings>
+        <inputParameters>
+            <name>sobjectArrays</name>
+            <value>
+                <elementReference>AccountsColl</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>vAccountsCollStr</assignToReference>
+            <name>output</name>
+        </outputParameters>
+    </actionCalls>
     <interviewLabel>Test Any flow Local Action {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Test Any flow Local Action</label>
     <loops>
@@ -38,12 +88,15 @@
         <label>Loop over Action Op Array</label>
         <locationX>400</locationX>
         <locationY>427</locationY>
-        <assignNextValueToReference>vActionOpString</assignNextValueToReference>
+        <assignNextValueToReference>vLoopVar</assignNextValueToReference>
         <collectionReference>vActionOpArray</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
             <targetReference>Action_Output</targetReference>
         </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Deserialize_Accounts</targetReference>
+        </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
         <name>BuilderType</name>
@@ -58,11 +111,33 @@
         </value>
     </processMetadataValues>
     <processType>Flow</processType>
+    <recordLookups>
+        <name>Get_Accounts</name>
+        <label>Get Accounts</label>
+        <locationX>233</locationX>
+        <locationY>92</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Serialize_Accounts_Coll</targetReference>
+        </connector>
+        <object>Account</object>
+        <outputReference>AccountsColl</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Industry</queriedFields>
+    </recordLookups>
+    <recordUpdates>
+        <name>UpdateAccountRecords</name>
+        <label>UpdateAccountRecords</label>
+        <locationX>658</locationX>
+        <locationY>107</locationY>
+        <inputReference>AccountsColl</inputReference>
+    </recordUpdates>
     <screens>
         <name>Action_Output</name>
         <label>Action Output</label>
-        <locationX>615</locationX>
-        <locationY>260</locationY>
+        <locationX>691</locationX>
+        <locationY>286</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -71,7 +146,7 @@
         </connector>
         <fields>
             <name>ActionOp</name>
-            <fieldText>&lt;p&gt;{!vActionOpString}&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;{!vLoopVar}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
@@ -81,10 +156,10 @@
         <locationX>50</locationX>
         <locationY>50</locationY>
         <connector>
-            <targetReference>Test_Js</targetReference>
+            <targetReference>Get_Accounts</targetReference>
         </connector>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
     <variables>
         <name>AccountsColl</name>
         <dataType>SObject</dataType>
@@ -92,6 +167,13 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>Account</objectType>
+    </variables>
+    <variables>
+        <name>vAccountsCollStr</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
     </variables>
     <variables>
         <name>vActionOpArray</name>
@@ -102,6 +184,13 @@
     </variables>
     <variables>
         <name>vActionOpString</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>vLoopVar</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
