@@ -8,7 +8,7 @@
         <actionName>c:anyLocalAction</actionName>
         <actionType>component</actionType>
         <connector>
-            <targetReference>Loop_over_Action_Op_Array</targetReference>
+            <targetReference>Deserialize_Accounts</targetReference>
         </connector>
         <inputParameters>
             <name>args</name>
@@ -19,7 +19,7 @@
         <inputParameters>
             <name>js</name>
             <value>
-                <stringValue>JSON.stringify(args.names.map(row=&gt;{row.Phone=&#39;42242424&#39;;return row}))</stringValue>
+                <stringValue>JSON.stringify(args.names.map(row=&gt;{row.Type=&#39;Customer - Direct&#39;;return row}))</stringValue>
             </value>
         </inputParameters>
         <outputParameters>
@@ -59,8 +59,8 @@
     <actionCalls>
         <name>Serialize_Accounts_Coll</name>
         <label>Serialize Accounts Coll</label>
-        <locationX>156</locationX>
-        <locationY>158</locationY>
+        <locationX>138</locationX>
+        <locationY>228</locationY>
         <actionName>SerializeInvocable</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -83,21 +83,6 @@
     </actionCalls>
     <interviewLabel>Test Any flow Local Action {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Test Any flow Local Action</label>
-    <loops>
-        <name>Loop_over_Action_Op_Array</name>
-        <label>Loop over Action Op Array</label>
-        <locationX>400</locationX>
-        <locationY>427</locationY>
-        <assignNextValueToReference>vLoopVar</assignNextValueToReference>
-        <collectionReference>vActionOpArray</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>Action_Output</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Deserialize_Accounts</targetReference>
-        </noMoreValuesConnector>
-    </loops>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -133,25 +118,6 @@
         <locationY>107</locationY>
         <inputReference>AccountsColl</inputReference>
     </recordUpdates>
-    <screens>
-        <name>Action_Output</name>
-        <label>Action Output</label>
-        <locationX>691</locationX>
-        <locationY>286</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>true</allowPause>
-        <connector>
-            <targetReference>Loop_over_Action_Op_Array</targetReference>
-        </connector>
-        <fields>
-            <name>ActionOp</name>
-            <fieldText>&lt;p&gt;{!vLoopVar}&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
     <start>
         <locationX>50</locationX>
         <locationY>50</locationY>
