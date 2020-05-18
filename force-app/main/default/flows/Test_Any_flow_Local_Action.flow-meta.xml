@@ -19,7 +19,7 @@
         <inputParameters>
             <name>js</name>
             <value>
-                <stringValue>JSON.stringify(args.names.map(row=&gt;{row.Type=&#39;Customer - Direct&#39;;return row}))</stringValue>
+                <stringValue>return JSON.stringify(args.names.map(row=&gt;{row.Phone=&#39;33243242&#39;;row.Type=&#39;Customer - Direct&#39;;return row}))</stringValue>
             </value>
         </inputParameters>
         <outputParameters>
@@ -125,7 +125,7 @@
             <targetReference>Get_Accounts</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Draft</status>
     <variables>
         <name>AccountsColl</name>
         <dataType>SObject</dataType>
