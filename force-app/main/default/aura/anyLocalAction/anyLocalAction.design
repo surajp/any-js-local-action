@@ -1,6 +1,7 @@
 <design:component >
   <design:attribute name="js" label="Javascript"/>
   <design:attribute name="args" label="Arguments JSON String"/>
-  <design:attribute name="output" label="The output string"/>
+  <design:attribute name="output" label="The output"/>
+  <design:attribute name="showErrorToast" label="Check to show a toast to the user on error. The error will be thrown anyway, and can be handled using a fault handler in the flow"/>
   <design:attribute name="outputArray" label="The output array"/>
 </design:component>
